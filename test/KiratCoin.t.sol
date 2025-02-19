@@ -9,10 +9,38 @@ contract KiratCoinTestContract is Test {
     KiratCoin c;
 
     event Transfer(address indexed from, address indexed to, uint256 amount);
-    event Approval(address indexed to, uint256 amount);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
     function setUp() public {
         c = new KiratCoin(100);
+    }
+
+    /**
+
+        hoax allows us to prank an address and set is balanace simultaneously
+        where deal only sets a balance of an address
+
+     */
+
+    function test_HoaxExample() public {
+        hoax(0x4F781660940951CCAd15EC34b121F1Dd3F244Edd, 100 ether);
+        c.test{value: 100 ether}();
+        assertEq(c.getBalance(), 100 ether, "ok");
+    }
+
+    function test_DealExample() public {
+        // this checks the native balance of the wallet address
+
+        address account = 0x4F781660940951CCAd15EC34b121F1Dd3F244Edd;
+        uint256 balance = 10 ether;
+
+        vm.deal(account, balance);
+
+        assertEq(address(account).balance, balance, "ok");
     }
 
     function test_ExpectEmitApprove() public {
@@ -20,7 +48,11 @@ contract KiratCoinTestContract is Test {
 
         // we care about values other than the indexed field also
         vm.expectEmit(true, true, false, true);
-        emit Approval(0x4F781660940951CCAd15EC34b121F1Dd3F244Edd, 100);
+        emit Approval(
+            address(this),
+            0x4F781660940951CCAd15EC34b121F1Dd3F244Edd,
+            100
+        );
 
         c.approve(0x4F781660940951CCAd15EC34b121F1Dd3F244Edd, 100);
 

@@ -6,22 +6,26 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import {console} from "forge-std/console.sol";
 
-contract KiratCoin is ERC20, Ownable{
-    constructor(uint256 _initialValue) Ownable(msg.sender) ERC20("KiratCoin","KRC"){
+contract KiratCoin is ERC20, Ownable {
+    constructor(
+        uint256 _initialValue
+    ) Ownable(msg.sender) ERC20("KiratCoin", "KRC") {
         // mint myself some new tokens
         _mint(msg.sender, _initialValue);
     }
 
-    function mint(address _account, uint256 _amount) public onlyOwner{
-        console.log("minting function called");
+    function test() public payable {}
+
+    function getBalance() public view returns (uint256) {
+        // returns the contract's balance
+        return address(this).balance;
+    }
+
+    function mint(address _account, uint256 _amount) public onlyOwner {
+        console.logString("minting function called");
         console.logAddress(_account);
         console.logUint(_amount);
         _mint(_account, _amount);
         console.log("minting function ended");
     }
-
-
-
-
-
 }
