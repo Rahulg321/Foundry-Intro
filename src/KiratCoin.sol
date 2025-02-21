@@ -18,6 +18,7 @@ contract KiratCoin is ERC20, Ownable {
 
     function getBalance() public view returns (uint256) {
         // returns the contract's balance
+        // this refers to the instance of the contract
         return address(this).balance;
     }
 
